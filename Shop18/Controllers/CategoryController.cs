@@ -23,5 +23,21 @@ namespace Shop18.Controllers
             IEnumerable<Category> categoryList = _db.Category;
             return View(categoryList);
         }
+
+
+        // GET
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST
+        [HttpPost]
+        public IActionResult Create(Category category)
+        {
+            _db.Category.Add(category);
+            _db.SaveChanges();
+            return RedirectToAction("Index");
+        }
     }
 }
