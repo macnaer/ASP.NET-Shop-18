@@ -44,5 +44,58 @@ namespace Shop18.Controllers
             }
             return View(category);
         }
+
+        // GET
+        public IActionResult Edit(int? id)
+        {
+            if(id == null || id == 0)
+            {
+                return NotFound();
+            }
+
+            var category = _db.Category.Find(id);
+
+            if(category == null)
+            {
+                return NotFound();
+            }
+
+            return View(category);
+        }
+
+        //GET
+        public IActionResult Delete(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+
+            var category = _db.Category.Find(id);
+
+            if (category == null)
+            {
+                return NotFound();
+            }
+            return View(category);
+        }
+
+        // POST
+        [HttpPost]
+        public IActionResult DeletePost(int? id)
+        {
+            var category = _db.Category.Find(id);
+
+            if(category == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                _db.Category.Remove(category);
+                _db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+        }
     }
 }
