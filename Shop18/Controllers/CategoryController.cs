@@ -63,6 +63,20 @@ namespace Shop18.Controllers
             return View(category);
         }
 
+        // POST
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(Category category)
+        {
+            if (ModelState.IsValid)
+            {
+                _db.Category.Update(category);
+                _db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(category);
+        }
+
         //GET
         public IActionResult Delete(int? id)
         {
