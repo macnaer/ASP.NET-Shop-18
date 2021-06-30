@@ -38,6 +38,18 @@ namespace Shop18.Controllers
             return View();
         }
 
+        public IActionResult Details(int id)
+        {
+            DetailsVM DetailsVM = new DetailsVM()
+            {
+                Product = _db.Product.Include(u => u.Category)
+               .Where(u => u.Id == id).FirstOrDefault(),
+                InCart = false
+            };
+
+            return View(DetailsVM);
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
