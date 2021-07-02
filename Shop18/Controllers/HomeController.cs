@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Shop18.Data;
 using Shop18.Models;
 using Shop18.Models.ViewModels;
+using Shop18.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -40,6 +42,13 @@ namespace Shop18.Controllers
 
         public IActionResult Details(int id)
         {
+            List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
+            if(HttpContext.Session.Get<IEnumerable<ShoppingCart>>(ENV.SessionCart) != null 
+                && HttpContext.Session.Get<IEnumerable<ShoppingCart>>(ENV.SessionCart).Count() > 0)
+            {
+                shoppingCartList = HttpContext.Session.Get<List<ShoppingCart>>(ENV.SessionCart);
+            }
+
             DetailsVM DetailsVM = new DetailsVM()
             {
                 Product = _db.Product.Include(u => u.Category)
@@ -47,7 +56,29 @@ namespace Shop18.Controllers
                 InCart = false
             };
 
+            foreach(var item in shoppingCartList)
+            {
+                if(item.ProductId == id)
+                {
+                    DetailsVM.InCart = true;
+                }
+            }
+
             return View(DetailsVM);
+        }
+        [HttpPost, ActionName("Details")]
+        public IActionResult DetailsPost(int id)
+        {
+            List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
+            if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(ENV.SessionCart) != null
+                && HttpContext.Session.Get<IEnumerable<ShoppingCart>>(ENV.SessionCart).Count() > 0)
+            {
+                shoppingCartList = HttpContext.Session.Get<List<ShoppingCart>>(ENV.SessionCart);
+            }
+
+            shoppingCartList.Add(new ShoppingCart { ProductId = id });
+            HttpContext.Session.Set(ENV.SessionCart, shoppingCartList);
+            return RedirectToAction(nameof(Index));
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
