@@ -30,7 +30,10 @@ namespace Shop18
             options.UseSqlServer(
                 Configuration.GetConnectionString("DefaultConnections")));
 
-            services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddDefaultTokenProviders()
+                .AddDefaultUI()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddHttpContextAccessor();
             services.AddSession(Options =>
