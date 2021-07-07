@@ -1,10 +1,14 @@
 ﻿@page
 @model RegisterModel
-@{
-    ViewData["Title"] = "Register";
-}
 
-<h1>@ViewData["Title"]</h1>
+@if (User.IsInRole(Shop18.ENV.AdminRole))
+{
+    <h1>Register new admin</h1>
+}
+else
+{
+    <h1>Register</h1>
+}
 
 <div class="row">
     <div class="col-md-4">
