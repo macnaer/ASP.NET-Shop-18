@@ -77,5 +77,21 @@ namespace Shop18.Controllers
 
             return View(productUserVM);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ActionName("Order")]
+        public IActionResult OrderPost(ProductUserVM productUserVM)
+        {
+            // Send email
+
+            return RedirectToAction(nameof(OrderConfirmation));
+        }
+
+        public IActionResult OrderConfirmation()
+        {
+            HttpContext.Session.Clear();
+            return View();
+        }
     }
 }
